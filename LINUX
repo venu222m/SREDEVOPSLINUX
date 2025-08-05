@@ -225,4 +225,59 @@ Mention tools used with Linux like Ansible, Nagios, Jenkins agents, etc.
 Know how to debug a failing build agent or a deployment script on a VM
 
 Understand permissions (chmod, chown), SELinux, and network troubleshooting (ping, curl, dig)
+----------------------------------------------------------------------------------------------------
+RSYNC VS SCP USE CASE
+
+
+Here is a line-by-line comparison of rsync vs scp — great for interviews and real-time usage:
+
+✅ 1. Basic Purpose
+rsync: Used to synchronize files/directories between local and remote systems.
+
+scp: Used to copy files/directories between local and remote systems.
+
+✅ 2. Data Transfer Behavior
+rsync: Transfers only changed parts of files (delta algorithm).
+
+scp: Transfers the entire file every time.
+
+✅ 3. Speed & Efficiency
+rsync: Faster — because it skips identical files or parts.
+
+scp: Slower — always sends the whole file.
+
+✅ 4. Resume Support
+rsync: ✅ Yes – supports resume using --partial.
+
+scp: ❌ No – does not support resume; restarts file transfer.
+
+✅ 5. SSH Support
+rsync: ✅ Yes – use with -e ssh.
+
+scp: ✅ Yes – uses SSH by default.
+
+✅ 6. Compression
+rsync: ✅ Use -z for compression.
+
+scp: ✅ Use -C (if supported) for compression.
+
+✅ 7. Recursive Copy
+rsync: ✅ Use -r or -a for recursive sync.
+
+scp: ✅ Use -r for recursive copy.
+
+✅ 8. Preserve File Permissions
+rsync: ✅ Use -a or -p to preserve ownership and timestamps.
+
+scp: ✅ Use -p to preserve timestamps.
+
+✅ 9. Dry Run (Preview)
+rsync: ✅ Use --dry-run to preview sync.
+
+scp: ❌ Not supported.
+
+✅ 10. Bidirectional Sync
+rsync: ✅ Can be configured for two-way sync (with scripts/tools).
+
+scp: ❌ One-way only (copy source → destination).
 
