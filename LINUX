@@ -1,0 +1,228 @@
+Top SRE + DevOps Linux Concepts Interview Questions & Answers
+🔹 Q1: How do you monitor disk usage in Linux and create an alert?
+Answer:
+You can monitor disk usage using df and create a script to alert if usage exceeds a threshold.
+
+Script Example:
+
+bash
+Copy
+Edit
+#!/bin/bash
+threshold=80
+usage=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
+
+if [ $usage -ge $threshold ]; then
+  echo "Disk usage critical: $usage%" | mail -s "Disk Alert" admin@example.com
+fi
+🔸 Use cases:
+
+Monitoring /var, /opt, /home
+
+Cron job setup for automation
+
+🔹 Q2: What is ulimit? How do you troubleshoot file descriptor issues?
+Answer:
+ulimit controls user limits for system resources (e.g., number of open files).
+
+Check current limit:
+
+bash
+Copy
+Edit
+ulimit -n
+Set temporarily:
+
+bash
+Copy
+Edit
+ulimit -n 65535
+Set permanently:
+Update /etc/security/limits.conf
+
+🔹 Q3: How do you rotate logs automatically in Linux?
+Answer:
+Using logrotate.
+
+Steps:
+
+Create config under /etc/logrotate.d/myapp:
+
+conf
+Copy
+Edit
+/var/log/myapp/*.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    notifempty
+    copytruncate
+}
+Test with:
+
+bash
+Copy
+Edit
+logrotate -d /etc/logrotate.conf
+🔹 Q4: How do you check system resource utilization?
+Answer:
+
+top / htop – CPU/memory
+
+vmstat – memory, IO, CPU
+
+iostat – disk IO
+
+free -m – RAM
+
+uptime – load average
+
+ps aux --sort=-%mem | head – Top memory processes
+
+🔸 Real-time SRE monitoring need
+
+🔹 Q5: What is a zombie process? How do you find and handle them?
+Answer:
+A zombie process is a defunct process that has completed but still has an entry in the process table.
+
+Find:
+
+bash
+Copy
+Edit
+ps aux | grep 'Z'
+Fix:
+
+Restart parent process
+
+Use wait() system call properly in scripts
+
+Kill parent if required (kill -9 PID)
+
+🔹 Q6: How do you troubleshoot high CPU usage in Linux?
+Answer:
+
+top or htop – identify process
+
+ps -p <pid> -o %cpu,%mem,cmd
+
+strace -p <pid> – trace syscalls
+
+nice/renice – change priority
+
+Restart or isolate heavy process
+
+🔹 Q7: What is the difference between hard link and soft link?
+Feature	Hard Link	Soft Link (Symlink)
+File pointer	Points directly to inode	Points to file path
+Cross-filesystem	Not allowed	Allowed
+File deleted	Still accessible	Becomes broken
+
+bash
+Copy
+Edit
+ln file1 hardlink
+ln -s file1 softlink
+🔹 Q8: How do you secure Linux servers?
+Answer:
+
+Disable root SSH: /etc/ssh/sshd_config → PermitRootLogin no
+
+Use SSH keys, not passwords
+
+Keep kernel & packages updated
+
+Use firewalls: ufw, iptables
+
+Monitor /var/log/auth.log
+
+Run audits: auditd, fail2ban
+
+🔹 Q9: What is systemd and how do you manage services?
+Answer:
+systemd is the system and service manager in modern Linux.
+
+Start service: systemctl start nginx
+
+Enable on boot: systemctl enable nginx
+
+Check logs: journalctl -u nginx
+
+🔸 Used in writing service unit files, auto-start apps
+
+🔹 Q10: How do you find which process is using a specific port?
+Answer:
+
+bash
+Copy
+Edit
+sudo lsof -i :8080
+sudo netstat -tuln | grep 8080
+sudo ss -ltnp
+🔹 Q11: What tools do you use for Linux performance troubleshooting?
+top, htop, iotop
+
+netstat, ss
+
+dstat, vmstat, iostat
+
+strace, lsof
+
+journalctl, dmesg
+
+🔸 Also use sar, nmon, perf in advanced scenarios
+
+🔹 Q12: How do you find large files in Linux?
+bash
+Copy
+Edit
+du -ah / | sort -rh | head -n 10
+Or check directories:
+
+bash
+Copy
+Edit
+du -sh /* | sort -rh
+🔹 Q13: What’s the difference between /etc/passwd, /etc/shadow, and /etc/group?
+/etc/passwd: Stores user account info
+
+/etc/shadow: Stores encrypted passwords
+
+/etc/group: Group info
+
+🔹 Q14: What is cron and how do you schedule jobs?
+bash
+Copy
+Edit
+crontab -e
+Example:
+
+bash
+Copy
+Edit
+0 2 * * * /home/user/backup.sh
+🔸 Used for backups, alert scripts, log cleanup
+
+🔹 Q15: Explain Linux runlevels and targets (systemd)
+Runlevel	systemd Target	Description
+0	poweroff.target	Shutdown
+1	rescue.target	Single-user mode
+3	multi-user.target	Command line, no GUI
+5	graphical.target	GUI
+6	reboot.target	Reboot
+
+bash
+Copy
+Edit
+systemctl get-default
+systemctl set-default multi-user.target
+🧠 Tips for Interview
+Explain with scenarios (e.g., "We had a disk alert script to monitor /var when logs filled the disk…")
+
+Mention tools used with Linux like Ansible, Nagios, Jenkins agents, etc.
+
+Know how to debug a failing build agent or a deployment script on a VM
+
+Understand permissions (chmod, chown), SELinux, and network troubleshooting (ping, curl, dig)
+
