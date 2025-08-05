@@ -1,0 +1,98 @@
+Here’s a concrete guide to where and how Linux is used in DevOps/SRE, with real-time responsibilities, commands, examples, and interview questions/answers focused on your 3.5+ years experience:
+
+✅ Linux Usage in DevOps/SRE – Real-Time Areas
+Area	Description	Real-time Tasks	Key Commands
+1. System Monitoring	Track system performance & resource usage	CPU/memory load check, disk usage, top processes	top, htop, vmstat, iostat, df, free
+2. Log Management	Debug & trace system/app errors	Check logs, rotate logs, forward logs	journalctl, tail -f, grep, logrotate
+3. Service/Process Management	Start/stop app services, manage daemons	Restart services, check status, enable boot	systemctl, ps -ef, kill, netstat, ss
+4. File & Permission Management	File ownership, permissions & security	Secure sensitive files, set correct permissions	chmod, chown, ls -l, umask
+5. Automation (Shell Scripting)	Repeated task automation	Backup, cleanup, deployment scripts	bash, cron, awk, sed, if/else, loops
+6. Networking	Debug connections, DNS, ports	Firewall rules, ping, DNS test, port scan	ping, dig, telnet, curl, nc, iptables
+7. User Management	Add/remove users, manage sudo	Least privilege, auditing, SSH access	useradd, passwd, visudo, id, groups
+8. Storage & Mounts	Manage disks, mount volumes	Check disk space, mount/unmount drives	mount, umount, lsblk, fdisk, df -h
+9. SSH & Remote Access	Securely access VMs & nodes	Setup key-based SSH, troubleshoot access	ssh, scp, rsync, ~/.ssh/config
+10. Security & Hardening	Secure OS, disable unused services	Configure firewalls, disable root SSH, audit	ufw, fail2ban, auditd, chkconfig
+
+🎯 SRE/DevOps Interview Questions & Answers – Linux Focus
+✅ Q1: How do you check memory usage and which process is consuming the most?
+A:
+
+bash
+Copy
+Edit
+free -m          # shows RAM usage  
+top              # shows top memory-consuming processes  
+ps aux --sort=-%mem | head -10
+✅ Q2: How do you debug high CPU usage on a Linux server?
+A:
+
+Use top or htop to identify top CPU-consuming processes.
+
+Use pidstat -u -p <PID> to get CPU usage per PID.
+
+Use nice/renice or kill to manage high CPU tasks.
+
+✅ Q3: How do you schedule a log cleanup job every 7 days?
+A:
+Use a cron job:
+
+bash
+Copy
+Edit
+0 2 */7 * * /usr/bin/find /var/log/myapp/ -type f -mtime +7 -exec rm -f {} \;
+✅ Q4: How do you restart a failed systemd service and check its logs?
+A:
+
+bash
+Copy
+Edit
+systemctl restart nginx
+systemctl status nginx
+journalctl -u nginx --since "1 hour ago"
+✅ Q5: What’s the difference between chmod 755 and chmod 644?
+A:
+
+755: rwxr-xr-x → owner can read/write/execute, others can read & execute.
+
+644: rw-r--r-- → owner can read/write, others can only read.
+
+✅ Q6: How would you automate SSH-based log sync from multiple VMs?
+A:
+Use rsync + key-based SSH + shell script with loop:
+
+bash
+Copy
+Edit
+for server in vm1 vm2 vm3; do
+  rsync -avz -e ssh /var/logs/ user@$server:/backup/logs/
+done
+✅ Q7: How do you troubleshoot if a port is blocked or not listening?
+A:
+
+bash
+Copy
+Edit
+netstat -tuln | grep <port>
+ss -tuln | grep <port>
+telnet <host> <port>
+✅ Q8: How do you ensure your Linux servers are secure?
+A:
+
+Disable root SSH login (/etc/ssh/sshd_config)
+
+Use key-based authentication.
+
+Close unused ports with ufw or iptables.
+
+Set up log monitoring & intrusion detection (e.g. fail2ban, auditd).
+
+📌 DevOps/SRE Resume Summary – Linux Bullet Points
+Automated daily log backups using shell scripts and rsync.
+
+Monitored CPU and memory metrics using top, vmstat, and alerts.
+
+Developed health check scripts and integrated with monitoring tools.
+
+Hardened Linux servers by disabling unused ports and services.
+
+Debugged network and system issues using netstat, journalctl, and tcpdump.
